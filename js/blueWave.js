@@ -2,8 +2,8 @@
 
 function BlueWave() {
 	this.animationSettings = {
-		xSize: 20,
-		ySize: 20,
+		xSize: 30,
+		ySize: 30,
 		speed: 2,
 		steps: 0.01, //in Percent
 		easing: null,
@@ -18,8 +18,8 @@ function BlueWave() {
 	};
 
 	this.calculatedSettings = {
-		currentDistance: -1,
-		lastDraw: 0
+		currentDistance: -2,
+		lastDraw: -2
 	};
 
 	this.addCanvas();
@@ -28,8 +28,7 @@ function BlueWave() {
 	this.resize();
 	this.calculateSettings();
 
-	this.spawnPixels(-0);
-	// this.runIn();
+	this.runIn();
 }
 
 BlueWave.prototype.addCanvas = function () {
@@ -57,35 +56,60 @@ BlueWave.prototype.calculateSettings = function() {
 }
 
 BlueWave.prototype.runIn = function() {
-	let coloumnsString = this.calculatedSettings.coloumns + 6;
+	let coloumnsString = this.calculatedSettings.coloumns + 14;
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, 50, {currentDistance:`+=${coloumnsString}`, onUpdate:this.updateHandlerRunIn, onUpdateParams:[self], ease: Power0.easeNone});
+	TweenLite.to(this.calculatedSettings, 4, {currentDistance:`+=${coloumnsString}`,
+				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
+				 onComplete:this.completeHandlerRunIn, onCompleteParams:[self],
+				 ease: Power0.easeNone});
 	// TweenLite.ticker.addEventListener("tick", self.drawCanvas, self);
 	// TweenLite.ticker.fps(20);
 }
 
-BlueWave.prototype.updateHandlerRunIn = function(scope) {
-
-	var distance = Math.ceil(scope.calculatedSettings.currentDistance);
-	console.log(distance);
+BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
+	var distance = Math.round(scope.calculatedSettings.currentDistance);
+	
 	if (distance > scope.calculatedSettings.lastDraw) {
+		// console.log(distance);
 		
 		scope.calculatedSettings.lastDraw = distance;
-		scope.spawnPixels(distance);
-
-	}
-	
-	
+		scope.spawnPixels(distance, addRectangles);
+	}	
 }
 
-BlueWave.prototype.drawCanvas = function() {
-	console.log("ticker");
+BlueWave.prototype.completeHandlerRunIn = function(scope) {
+	scope.runOut();
 }
 
 
-BlueWave.prototype.spawnPixels = function(xStep) {
+BlueWave.prototype.runOut = function() {
+	//reset values
+	this.calculatedSettings.currentDistance = -2;
+	this.calculatedSettings.lastDraw = -2;
+
+	let coloumnsString = this.calculatedSettings.coloumns + 46;
+	coloumnsString = coloumnsString.toString();
+	var self = this;
+
+	TweenLite.to(this.calculatedSettings, 4, {currentDistance:`+=${coloumnsString}`,
+				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
+				 ease: Power0.easeNone});
+	TweenLite.ticker.fps(20);
+}
+
+
+
+
+
+
+
+
+
+
+
+BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	this.ctx.fillStyle = this.animationSettings.color;
 	
 	// let steps = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
@@ -102,14 +126,24 @@ BlueWave.prototype.spawnPixels = function(xStep) {
 		for (let j = 0; j < rowArray.length; j++) {
 			let randomX = (xStep-i) * this.animationSettings.xSize;
 			let randomY = rowArray[j] * this.animationSettings.ySize;
-			this.ctx.fillRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
+			if (addRectangles) {
+				this.ctx.fillRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
+			} else {
+				this.ctx.clearRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
+			}
+			
 		}
 	}
 
 	//fill all previous Pixels
 	// this.ctx.fillStyle = "#00f9ff";
 	let lastStep = (xStep - (steps.length + 1))*this.animationSettings.xSize;
-	this.ctx.fillRect(0,0, lastStep, this.size.h);
+	if (addRectangles) {
+		this.ctx.fillRect(0,0, lastStep, this.size.h);
+	} else {
+		this.ctx.clearRect(0,0, lastStep, this.size.h);
+	}	
+	
 }
 
 BlueWave.prototype.shuffleArray = function (array) {
