@@ -18,8 +18,8 @@ function BlueWave() {
 	};
 
 	this.calculatedSettings = {
-		currentDistance: -2,
-		lastDraw: -2
+		currentDistance: 0,
+		lastDraw: 0
 	};
 
 	this.addCanvas();
@@ -28,7 +28,13 @@ function BlueWave() {
 	this.resize();
 	this.calculateSettings();
 
-	this.runIn();
+	var self = this;
+	// setTimeout(function() {self.runIn();}, 1000);
+	// self.runIn();
+	document.getElementById('startImage').addEventListener('click', function() {
+		self.runIn();
+	})
+	
 }
 
 BlueWave.prototype.addCanvas = function () {
@@ -37,6 +43,10 @@ BlueWave.prototype.addCanvas = function () {
 	canv.style.zIndex = '99999';
 	canv.style.pointerEvents = "none";
 	canv.style.display = 'block';
+	canv.style.position = 'fixed';
+	canv.style.top = 0;
+	canv.style.left = 0;
+
 	document.body.appendChild(canv);
 	this.canvas = canv;
 	this.ctx = this.canvas.getContext("2d");
@@ -60,7 +70,7 @@ BlueWave.prototype.runIn = function() {
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, 4, {currentDistance:`+=${coloumnsString}`,
+	TweenLite.to(this.calculatedSettings, 1, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
 				 onComplete:this.completeHandlerRunIn, onCompleteParams:[self],
 				 ease: Power0.easeNone});
@@ -80,6 +90,7 @@ BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 }
 
 BlueWave.prototype.completeHandlerRunIn = function(scope) {
+	document.getElementById('startImage').style.display = 'none'
 	scope.runOut();
 }
 
@@ -93,10 +104,10 @@ BlueWave.prototype.runOut = function() {
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, 4, {currentDistance:`+=${coloumnsString}`,
+	TweenLite.to(this.calculatedSettings, 1.8, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
 				 ease: Power0.easeNone});
-	TweenLite.ticker.fps(20);
+	// TweenLite.ticker.fps(20);
 }
 
 
@@ -110,10 +121,17 @@ BlueWave.prototype.runOut = function() {
 
 
 BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
+	
+
+	// this.resize();
 	this.ctx.fillStyle = this.animationSettings.color;
+
+	if (!addRectangles) { //fill all on out
+		// this.ctx.fillRect(0,0, this.size.w, this.size.h)
+	}
 	
 	// let steps = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
-	let steps = [0.1, 0.3, 0.5, 0.7, 1];
+	let steps = [0.1, 0.1, 0.3, 0.5, 0.5, 1];
 
 	for (let i = 0; i < steps.length; i++) {
 		
@@ -137,7 +155,7 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 
 	//fill all previous Pixels
 	// this.ctx.fillStyle = "#00f9ff";
-	let lastStep = (xStep - (steps.length + 1))*this.animationSettings.xSize;
+	let lastStep = (xStep - (steps.length - 1))*this.animationSettings.xSize;
 	if (addRectangles) {
 		this.ctx.fillRect(0,0, lastStep, this.size.h);
 	} else {
@@ -171,7 +189,7 @@ BlueWave.prototype.eventListeners = function () {
 }
 
 BlueWave.prototype.resize = function () {
-	console.log('resizing');
+	// console.log('resizing');
 
 	this.size.w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     this.size.h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;

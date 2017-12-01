@@ -1,6 +1,7 @@
 body {
     padding: 0;
     margin: 0;
+    overflow: hidden;
 
 }
 
@@ -21,6 +22,14 @@ a:hover {
   text-decoration: underline;
 }
 
+img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    display: block;
+    height: auto;
+}
 
 
 

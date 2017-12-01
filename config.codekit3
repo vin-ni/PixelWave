@@ -9,6 +9,16 @@
 	],
 "creatorBuild": "26148",
 "files": {
+	"\/css\/main-min.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/main-min-min.css",
+		"oF": 0,
+		"oS": 3
+		},
 	"\/css\/main.css": {
 		"aP": 1,
 		"bl": 0,
@@ -38,6 +48,26 @@
 		"oAP": "\/css\/normalize.min-min.css",
 		"oF": 0,
 		"oS": 3
+		},
+	"\/img\/1.jpg": {
+		"ft": 16384,
+		"iS": 47413,
+		"oA": 0,
+		"oAP": "\/img\/1.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"\/img\/background.jpg": {
+		"ft": 16384,
+		"iS": 63100,
+		"oA": 0,
+		"oAP": "\/img\/background.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 1,
+		"q": 100
 		},
 	"\/index.html": {
 		"cB": 0,
