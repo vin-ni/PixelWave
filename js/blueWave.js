@@ -21,7 +21,8 @@ function BlueWave(settings) {
 
 	this.calculatedSettings = {
 		currentDistance: 0,
-		lastDraw: 0
+		lastDraw: 0,
+		blockRerun: false,
 	};
 
 	this.addCanvas();
@@ -35,9 +36,6 @@ function BlueWave(settings) {
 	var self = this;
 	// setTimeout(function() {self.runIn();}, 1000);
 	// self.runIn();
-	document.getElementById('startImage').addEventListener('click', function() {
-		self.start();
-	})
 }
 
 BlueWave.prototype.addCanvas = function () {
@@ -67,16 +65,22 @@ BlueWave.prototype.calculateSettings = function() {
 	this.calculatedSettings.rowArray = Array.apply(null, {length: n}).map(Number.call, Number);
 }
 
-BlueWave.prototype.start = function() {
-	this.resize();
+BlueWave.prototype.start = function(functionToExecute) {
+	if (this.calculateSettings.blockRerun) {return}
+	this.calculateSettings.blockRerun = true;
+
+	//reset values
+	this.calculatedSettings.currentDistance = 0;
+	this.calculatedSettings.lastDraw = 0;
+
 	let coloumnsString = this.calculatedSettings.coloumns + this.animationSettings.steps.length;
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, this.animationSettings.speedIn, {currentDistance:`+=${coloumnsString}`,
-				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
-				 onComplete:this.completeHandlerStart, onCompleteParams:[self],
-				 ease: Power0.easeNone});
+	this.animation = TweenLite.to(this.calculatedSettings, this.animationSettings.speedIn, {currentDistance:`+=${coloumnsString}`,
+				 		onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
+				 		onComplete:this.completeHandlerStart, onCompleteParams:[self, functionToExecute],
+				 		ease: Power0.easeNone});
 }
 
 BlueWave.prototype.end = function() {
@@ -88,29 +92,32 @@ BlueWave.prototype.end = function() {
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, this.animationSettings.speedOut, {currentDistance:`+=${coloumnsString}`,
-				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
-				 onComplete:this.completeHandlerEnd, onCompleteParams:[self],
-				 ease: Power0.easeNone});
+	this.animation = TweenLite.to(this.calculatedSettings, this.animationSettings.speedOut, {currentDistance:`+=${coloumnsString}`,
+				 		onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
+				 		onComplete:this.completeHandlerEnd, onCompleteParams:[self],
+				 		ease: Power0.easeNone});
 }
 
 BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 	var distance = Math.round(scope.calculatedSettings.currentDistance);
 	
 	if (distance > scope.calculatedSettings.lastDraw) {
-		// console.log(distance);
 		scope.calculatedSettings.lastDraw = distance;
 		scope.spawnPixels(distance, addRectangles);
 	}	
 }
 
-BlueWave.prototype.completeHandlerStart = function(scope) {
-	// document.getElementById('startImage').style.display = 'none'
+BlueWave.prototype.completeHandlerStart = function(scope, functionToExecute) {
 	scope.end();
+
+	//run passed function from outside
+	if (functionToExecute) {
+		functionToExecute();
+	}
 }
 
 BlueWave.prototype.completeHandlerEnd = function(scope) {
-	console.log("END");
+	scope.calculateSettings.blockRerun = false;
 }
 
 BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {

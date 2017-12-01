@@ -14,7 +14,6 @@
 
         
         
-        <img src="img/1.jpg">
         <img id="startImage" src="img/background.jpg">
 
 
@@ -26,6 +25,17 @@
             var bluewave = new BlueWave({
                 canvasTop: 0
             });
+
+            function example () {
+                console.log("dope");
+            }
+
+            document.getElementById('startImage').addEventListener('click', function() {
+                bluewave.start(example);
+            })
+
+            
+
         </script>
         
     </body>
