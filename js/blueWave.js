@@ -28,14 +28,15 @@ function BlueWave(settings) {
 	this.eventListeners();
 
 	this.resize();
-	this.calculateSettings();
 	this.calculateSquaresSize();
+	this.calculateSettings();
+	
 
 	var self = this;
 	// setTimeout(function() {self.runIn();}, 1000);
 	// self.runIn();
 	document.getElementById('startImage').addEventListener('click', function() {
-		self.runIn();
+		self.start();
 	})
 }
 
@@ -66,21 +67,22 @@ BlueWave.prototype.calculateSettings = function() {
 	this.calculatedSettings.rowArray = Array.apply(null, {length: n}).map(Number.call, Number);
 }
 
-BlueWave.prototype.runIn = function() {
+BlueWave.prototype.start = function() {
+	this.resize();
 	let coloumnsString = this.calculatedSettings.coloumns + this.animationSettings.steps.length;
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
 	TweenLite.to(this.calculatedSettings, this.animationSettings.speedIn, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
-				 onComplete:this.completeHandlerRunIn, onCompleteParams:[self],
+				 onComplete:this.completeHandlerStart, onCompleteParams:[self],
 				 ease: Power0.easeNone});
 }
 
-BlueWave.prototype.runOut = function() {
+BlueWave.prototype.end = function() {
 	//reset values
-	this.calculatedSettings.currentDistance = -2;
-	this.calculatedSettings.lastDraw = -2;
+	this.calculatedSettings.currentDistance = 0;
+	this.calculatedSettings.lastDraw = 0;
 
 	let coloumnsString = this.calculatedSettings.coloumns + this.animationSettings.steps.length;
 	coloumnsString = coloumnsString.toString();
@@ -88,6 +90,7 @@ BlueWave.prototype.runOut = function() {
 
 	TweenLite.to(this.calculatedSettings, this.animationSettings.speedOut, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
+				 onComplete:this.completeHandlerEnd, onCompleteParams:[self],
 				 ease: Power0.easeNone});
 }
 
@@ -101,11 +104,14 @@ BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 	}	
 }
 
-BlueWave.prototype.completeHandlerRunIn = function(scope) {
-	document.getElementById('startImage').style.display = 'none'
-	scope.runOut();
+BlueWave.prototype.completeHandlerStart = function(scope) {
+	// document.getElementById('startImage').style.display = 'none'
+	scope.end();
 }
 
+BlueWave.prototype.completeHandlerEnd = function(scope) {
+	console.log("END");
+}
 
 BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	this.ctx.fillStyle = this.animationSettings.color;
@@ -151,7 +157,19 @@ BlueWave.prototype.setBlueWavePosition = function(x, y) {
 
 BlueWave.prototype.calculateSquaresSize = function() {
 	if (this.animationSettings.autoCalculateSquaresSize) {
-		if (true) {}
+		if (this.size.w >= 1600) {
+			this.animationSettings.xSize = 48;
+			this.animationSettings.ySize = 48;			
+		} else if (this.size.w >= 1200) {
+			this.animationSettings.xSize = 42;
+			this.animationSettings.ySize = 42;			
+		} else if (this.size.w >= 960) {
+			this.animationSettings.xSize = 36;
+			this.animationSettings.ySize = 36;			
+		} else {
+			this.animationSettings.xSize = 30;
+			this.animationSettings.ySize = 30;
+		}
 	}
 }
 
