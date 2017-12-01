@@ -6,8 +6,8 @@ function BlueWave(settings) {
 		ySize: settings.ySize || 48,
 		steps: settings.steps || [0.1, 0.1, 0.3, 0.5, 0.5, 1],
 		color: settings.color || "#305EFF",
-		speedIn: settings.speedIn || 0.5,
-		speedOut: settings.speedOut || 0.5,
+		speedIn: settings.speedIn || 4, //0.5
+		speedOut: settings.speedOut || 4, //0.5
 		canvasTop: settings.canvasTop || 0,
 		canvasLeft: settings.canvasLeft || 0,
 		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || true
@@ -151,9 +151,7 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	} else {
 		this.ctx.clearRect(0,0, lastStep, this.size.h);
 	}	
-	
 }
-
 
 BlueWave.prototype.setBlueWavePosition = function(x, y) {
 	this.animationSettings.canvasTop = y;
@@ -180,27 +178,25 @@ BlueWave.prototype.calculateSquaresSize = function() {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 BlueWave.prototype.eventListeners = function () {
 	this.resize = this.resize.bind(this);
 	window.addEventListener('resize', this.resize);
 }
+
+// BlueWave.prototype.debounce = function () {
+//   var timer;
+//   return function(event){
+//     if(timer) clearTimeout(timer);
+//     timer = setTimeout(func,100,event);
+//   };
+// }
+
+// BlueWave.prototype.debounceResize = function () {
+
+// }
+
+//////ADDD DEBOUNCE ON MONDAY
+
 
 BlueWave.prototype.resize = function () {
 	// console.log('resizing');
@@ -217,8 +213,14 @@ BlueWave.prototype.resize = function () {
     this.ctx.scale(this.size.scaleRatio, this.size.scaleRatio);
 
     //everything gets blue if you resize while the animation happens;
-}
+    console.log(this.animation);
+    if (this.calculateSettings.blockRerun) {
+    	this.animation.pause();
+    	this.ctx.fillStyle = this.animationSettings.color;
+    	this.ctx.fillRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
 
+    }
+}
 
 // =================== SANTAS LITTLE HELPERS =================== //
 
