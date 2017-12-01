@@ -1,0 +1,1 @@
+var bluewave=new BlueWave;
