@@ -2,13 +2,15 @@
 
 function BlueWave() {
 	this.animationSettings = {
-		xSize: 30,
-		ySize: 30,
+		xSize: 50,
+		ySize: 50,
 		speed: 2,
-		steps: 0.01, //in Percent
-		easing: null,
-		spawnSpeed: 1,
-		color: "#305EFF"
+		steps: [0.1, 0.1, 0.3, 0.5, 0.5, 1],
+		color: "#305EFF",
+		// speedIn: 0.7,
+		// speedOut: 1.1
+		speedIn: 2,
+		speedOut: 2.8
 	}
 
 	this.size = {
@@ -53,16 +55,15 @@ BlueWave.prototype.addCanvas = function () {
 }
 
 BlueWave.prototype.calculateSettings = function() {
-	//anzahl an coloumns ↓↓↓↓
+	//amount coloumns ↓↓↓↓
 	this.calculatedSettings.coloumns = Math.ceil(this.size.w / this.animationSettings.xSize);
-	//anzahl an linien →
-	//				   →
-	//				   →
+	//amount linien →
+	//				→
+	//				→
 	this.calculatedSettings.rows = Math.ceil(this.size.h / this.animationSettings.ySize);
 
 	var n = this.calculatedSettings.rows;
 	this.calculatedSettings.rowArray = Array.apply(null, {length: n}).map(Number.call, Number);
-	this.calculatedSettings.rowArray = this.shuffleArray(this.calculatedSettings.rowArray);
 }
 
 BlueWave.prototype.runIn = function() {
@@ -70,7 +71,7 @@ BlueWave.prototype.runIn = function() {
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, 1, {currentDistance:`+=${coloumnsString}`,
+	TweenLite.to(this.calculatedSettings, this.animationSettings.speedIn, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, true],
 				 onComplete:this.completeHandlerRunIn, onCompleteParams:[self],
 				 ease: Power0.easeNone});
@@ -104,7 +105,7 @@ BlueWave.prototype.runOut = function() {
 	coloumnsString = coloumnsString.toString();
 	var self = this;
 
-	TweenLite.to(this.calculatedSettings, 1.8, {currentDistance:`+=${coloumnsString}`,
+	TweenLite.to(this.calculatedSettings, this.animationSettings.speedOut, {currentDistance:`+=${coloumnsString}`,
 				 onUpdate:this.updateHandlerRunIn, onUpdateParams:[self, false],
 				 ease: Power0.easeNone});
 	// TweenLite.ticker.fps(20);
@@ -121,22 +122,12 @@ BlueWave.prototype.runOut = function() {
 
 
 BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
-	
-
-	// this.resize();
 	this.ctx.fillStyle = this.animationSettings.color;
 
-	if (!addRectangles) { //fill all on out
-		// this.ctx.fillRect(0,0, this.size.w, this.size.h)
-	}
-	
-	// let steps = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
-	let steps = [0.1, 0.1, 0.3, 0.5, 0.5, 1];
-
-	for (let i = 0; i < steps.length; i++) {
+	for (let i = 0; i < this.animationSettings.steps.length; i++) {
 		
 		this.calculatedSettings.rowArray = this.shuffleArray(this.calculatedSettings.rowArray); //shuffle
-		let maxElements = Math.ceil(steps[i] * this.calculatedSettings.rows);
+		let maxElements = Math.ceil(this.animationSettings.steps[i] * this.calculatedSettings.rows);
 		let rowArray = this.calculatedSettings.rowArray.slice(0, maxElements);
 		// console.log(maxElements);
 		// console.log(rowArray);
@@ -155,7 +146,7 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 
 	//fill all previous Pixels
 	// this.ctx.fillStyle = "#00f9ff";
-	let lastStep = (xStep - (steps.length - 1))*this.animationSettings.xSize;
+	let lastStep = (xStep - (this.animationSettings.steps.length - 1))*this.animationSettings.xSize;
 	if (addRectangles) {
 		this.ctx.fillRect(0,0, lastStep, this.size.h);
 	} else {
@@ -163,6 +154,26 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	}	
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BlueWave.prototype.shuffleArray = function (array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
