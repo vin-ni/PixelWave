@@ -1,5 +1,6 @@
 # Pixel Wave Transition
-![alt text](/dev/img/pixelWave.gif "Pixel Wave Animation Preview")
+![Pixel Wave Animation Preview](/dev/img/pixelWave.gif "Pixel Wave Animation Preview")
+![Pixel Wave Animation Mobile](/dev/img/pixelWaveMobile.gif "Pixel Wave Animation Mobile")
 
 ## Install
 At the bottom of your body:
