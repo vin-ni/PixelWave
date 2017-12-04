@@ -40,14 +40,18 @@ You can pass these options while you init the wave:
 | This is a function that sets a given size for different devices. (*add values)                     | autoCalculateSquaresSize | false                        |
 | Add a delay in s before animation out runs.                                                        | delayMiddle              | 0                            |
 
-## Full Example
+## Full Example with options
 
 ```javascript
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
 <script src="js/blueWave.js"></script>
 
 var bluewave = new BlueWave({
-    canvasTop: 0
+    canvasTop: 50, //for a header
+    speedIn: 3,
+    speedOut: 1,
+    autoCalculateSquaresSize: true,
+    color: '#000000'   
 });
 
 function start () {console.log('start')}
