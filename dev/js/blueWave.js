@@ -6,6 +6,7 @@ function BlueWave(settings) {
 		ySize: settings.ySize || 48,
 		steps: settings.steps || [0.1, 0.1, 0.3, 0.5, 0.5, 1],
 		color: settings.color || "#305EFF",
+		zIndex: settings.zIndex || 99999,
 		speedIn: settings.speedIn || 0.7, //0.5
 		speedOut: settings.speedOut || 0.7, //0.5
 		canvasTop: settings.canvasTop || 0,
@@ -38,7 +39,7 @@ function BlueWave(settings) {
 BlueWave.prototype.addCanvas = function () {
 	var canv = document.createElement('canvas');
 	canv.id = 'blueWave';
-	canv.style.zIndex = '99999';
+	canv.style.zIndex = this.animationSettings.zIndex;
 	canv.style.pointerEvents = "none";
 	canv.style.display = 'block';
 	canv.style.position = 'fixed';
