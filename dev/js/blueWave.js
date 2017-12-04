@@ -7,8 +7,8 @@ function BlueWave(settings) {
 		steps: settings.steps || [0.1, 0.1, 0.3, 0.5, 0.5, 1],
 		color: settings.color || "#305EFF",
 		zIndex: settings.zIndex || 99999,
-		speedIn: settings.speedIn || 0.7, //0.5
-		speedOut: settings.speedOut || 0.7, //0.5
+		speedIn: settings.speedIn || 1.2, //0.5
+		speedOut: settings.speedOut || 1.2, //0.5
 		canvasTop: settings.canvasTop || 0,
 		canvasLeft: settings.canvasLeft || 0,
 		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || false,
