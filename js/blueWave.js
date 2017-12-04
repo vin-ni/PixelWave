@@ -8,13 +8,10 @@ function BlueWave(settings) {
 		color: settings.color || "#305EFF",
 		speedIn: settings.speedIn || 0.7, //0.5
 		speedOut: settings.speedOut || 0.7, //0.5
-		pause: 0,
 		canvasTop: settings.canvasTop || 0,
 		canvasLeft: settings.canvasLeft || 0,
 		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || false,
-		callOnStart: null,
-		callOnBlue: null,
-		callOnEnd: null
+		delayMiddle: settings.delayMiddle || 0
 	}
 
 	this.size = {
@@ -36,8 +33,6 @@ function BlueWave(settings) {
 	this.resizeCanvas();
 	// this.calculateSquaresSize();
 	// this.calculateSettings();
-
-	var self = this;
 }
 
 BlueWave.prototype.addCanvas = function () {
@@ -119,7 +114,9 @@ BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 BlueWave.prototype.completeHandlerStart = function(scope, callbackMiddle, callbackEnd) {
 	if (callbackMiddle) {callbackMiddle()};
 
-	scope.end(callbackEnd);
+	//call animation out
+	setTimeout(function() {scope.end(callbackEnd);}, scope.animationSettings.delayMiddle*1000);
+	
 }
 
 BlueWave.prototype.completeHandlerEnd = function(scope, callbackEnd) {
