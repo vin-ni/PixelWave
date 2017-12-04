@@ -1,12 +1,14 @@
 /* eslint-disable */
 
-//  PixelWave.js
-//  Pixel Wave Animation for seamless page transitions 
-//  Version 0.1 04/12/17
+/*! 
 //
-//  Created by Vinzenz Aubry for sansho (04/12/17) . 
-//  MIT Licensed
+//	PixelWave.js
+// 	Pixel Wave Animation for seamless page transitions 
+// 	Version 0.1 04/12/17
+// 	Created by Vinzenz Aubry for sansho (04/12/17)
+// 	@license MIT Licensed
 //
+*/
 
 function PixelWave(settings) {
 	this.animationSettings = {
