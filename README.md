@@ -1,5 +1,5 @@
 # Pixel Wave Transition
-![alt text](https://github.com/vin-ni/bluewave/blob/master/dev/img/pixelWave.gif "Pixel Wave Animation Preview")
+![alt text](/dev/img/pixelWave.gif "Pixel Wave Animation Preview")
 
 ## Install
 At the bottom of your body:
