@@ -31,7 +31,9 @@ img {
     height: auto;
 }
 
-
+canvas {
+    background-color: tomato;
+}
 
 
 

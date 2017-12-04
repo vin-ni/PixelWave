@@ -6,11 +6,15 @@ function BlueWave(settings) {
 		ySize: settings.ySize || 48,
 		steps: settings.steps || [0.1, 0.1, 0.3, 0.5, 0.5, 1],
 		color: settings.color || "#305EFF",
-		speedIn: settings.speedIn || 4, //0.5
-		speedOut: settings.speedOut || 4, //0.5
+		speedIn: settings.speedIn || 10, //0.5
+		speedOut: settings.speedOut || 10, //0.5
+		pause: 0,
 		canvasTop: settings.canvasTop || 0,
 		canvasLeft: settings.canvasLeft || 0,
-		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || true
+		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || true,
+		callOnStart: null,
+		callOnBlue: null,
+		callOnEnd: null
 	}
 
 	this.size = {
@@ -22,13 +26,14 @@ function BlueWave(settings) {
 	this.calculatedSettings = {
 		currentDistance: 0,
 		lastDraw: 0,
-		blockRerun: false,
+		blockRun: false,
+		ending: false
 	};
 
 	this.addCanvas();
 	this.eventListeners();
 
-	this.resize();
+	this.resizeCanvas();
 	this.calculateSquaresSize();
 	this.calculateSettings();
 	
@@ -66,10 +71,13 @@ BlueWave.prototype.calculateSettings = function() {
 }
 
 BlueWave.prototype.start = function(functionToExecute) {
-	if (this.calculateSettings.blockRerun) {return}
-	this.calculateSettings.blockRerun = true;
+	if (this.calculateSettings.blockRun) {return}
+	this.calculateSettings.blockRun = true;
 
 	//reset values
+	this.resizeCanvas();
+	this.calculateSquaresSize();
+	this.calculateSettings();
 	this.calculatedSettings.currentDistance = 0;
 	this.calculatedSettings.lastDraw = 0;
 
@@ -87,6 +95,8 @@ BlueWave.prototype.end = function() {
 	//reset values
 	this.calculatedSettings.currentDistance = 0;
 	this.calculatedSettings.lastDraw = 0;
+
+	this.calculatedSettings.ending = true;
 
 	let coloumnsString = this.calculatedSettings.coloumns + this.animationSettings.steps.length;
 	coloumnsString = coloumnsString.toString();
@@ -117,7 +127,8 @@ BlueWave.prototype.completeHandlerStart = function(scope, functionToExecute) {
 }
 
 BlueWave.prototype.completeHandlerEnd = function(scope) {
-	scope.calculateSettings.blockRerun = false;
+	scope.calculateSettings.blockRun = false;
+	scope.calculatedSettings.ending = false;
 }
 
 BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
@@ -139,7 +150,6 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 			} else {
 				this.ctx.clearRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
 			}
-			
 		}
 	}
 
@@ -179,28 +189,73 @@ BlueWave.prototype.calculateSquaresSize = function() {
 }
 
 BlueWave.prototype.eventListeners = function () {
-	this.resize = this.resize.bind(this);
+	this.resize = this.resizeFunctions.bind(this);
 	window.addEventListener('resize', this.resize);
+	// window.addEventListener('resize', this.resizeFunctions);
+
+	this.debounceF = this.debounce(function() {
+		console.log('debounce function got called');
+		this.resizeCanvas();
+		this.calculateSquaresSize();
+		this.calculateSettings();
+
+		if (this.animation) {this._progress = this.animation.progress();}
+		this.animation.kill();
+		console.log(this.calculatedSettings.ending);
+
+		//rebuild animation with new values
+		if (this.calculatedSettings.ending) {
+			console.log('started End');
+			this.end();
+			this.animation.seek(this._progress*this.animationSettings.speedOut);
+		} else {
+			this.calculatedSettings.blockRun = false; //otherwise start won't run
+			this.start();
+			this.animation.seek(this._progress*this.animationSettings.speedIn);
+			console.log('started Start');
+		}
+
+		
+		console.log(this._progress);
+
+		if (this.calculatedSettings.ending) {this.fill()};
+
+		this.animation.play();
+		console.log("animation got restarted")
+	}, 250);
 }
 
-// BlueWave.prototype.debounce = function () {
-//   var timer;
-//   return function(event){
-//     if(timer) clearTimeout(timer);
-//     timer = setTimeout(func,100,event);
-//   };
-// }
+BlueWave.prototype.resizeFunctions = function () {
+	if (!this.calculateSettings.blockRun) {return}
+	this.animation.pause();
+	//debouncer
+	this.debounceF();
+}
 
-// BlueWave.prototype.debounceResize = function () {
+BlueWave.prototype.debounce = function (func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
 
-// }
+BlueWave.prototype.fill = function () {
+	if (this.calculateSettings.blockRun) {
+    	this.ctx.fillStyle = this.animationSettings.color;
+    	this.ctx.fillRect(0,0,this.size.w,this.size.h);
+    	console.log(this.size.w);
+    }
+}
 
-//////ADDD DEBOUNCE ON MONDAY
-
-
-BlueWave.prototype.resize = function () {
-	// console.log('resizing');
-
+BlueWave.prototype.resizeCanvas = function () {
 	this.size.w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     this.size.h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -210,16 +265,7 @@ BlueWave.prototype.resize = function () {
     this.canvas.style.width = this.size.w+'px';
     this.canvas.style.height = this.size.h + 'px';
 
-    this.ctx.scale(this.size.scaleRatio, this.size.scaleRatio);
-
-    //everything gets blue if you resize while the animation happens;
-    console.log(this.animation);
-    if (this.calculateSettings.blockRerun) {
-    	this.animation.pause();
-    	this.ctx.fillStyle = this.animationSettings.color;
-    	this.ctx.fillRect(randomX,randomY,this.animationSettings.xSize,this.animationSettings.ySize);
-
-    }
+    this.ctx.scale(this.size.scaleRatio, this.size.scaleRatio);  
 }
 
 // =================== SANTAS LITTLE HELPERS =================== //
