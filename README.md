@@ -1,4 +1,4 @@
-# Pixel Wave Transition
+# Pixel Wave Page Transition
 ![Pixel Wave Animation Preview](/dev/img/pixelWave.gif "Pixel Wave Animation Preview")
 ![Pixel Wave Animation Mobile](/dev/img/pixelWaveMobile1.gif "Pixel Wave Animation Mobile")
 
