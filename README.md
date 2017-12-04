@@ -62,3 +62,6 @@ document.getElementById('startImage').addEventListener('click', function() {
     bluewave.start(start, middle, end);
 })
 ```
+
+### Contribution
+If anyone wants to contribute, just fork the project or write me at vinzenz@sansho.studio :)
