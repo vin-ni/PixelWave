@@ -133,8 +133,6 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 		this.calculatedSettings.rowArray = this.shuffleArray(this.calculatedSettings.rowArray); //shuffle
 		let maxElements = Math.ceil(this.animationSettings.steps[i] * this.calculatedSettings.rows);
 		let rowArray = this.calculatedSettings.rowArray.slice(0, maxElements);
-		// console.log(maxElements);
-		// console.log(rowArray);
 
 		for (let j = 0; j < rowArray.length; j++) {
 			let randomX = (xStep-i) * this.animationSettings.xSize;
@@ -148,7 +146,6 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	}
 
 	//fill all previous Pixels
-	// this.ctx.fillStyle = "#00f9ff";
 	let lastStep = (xStep - (this.animationSettings.steps.length - 1))*this.animationSettings.xSize;
 	if (addRectangles) {
 		this.ctx.fillRect(0,0, lastStep, this.size.h);
