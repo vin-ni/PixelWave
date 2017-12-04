@@ -19,7 +19,7 @@ bluewave.start();
 ```
 
 ## Options
-When starting the wave you can add callbackfunctions to get executed:
+When starting the wave you can add callback functions to get executed at certain times:
 ```javascript
 bluewave.start([runsAtStart], [runsAtMiddle], [runsAtEnd]);
 ```
