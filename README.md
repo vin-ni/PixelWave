@@ -6,22 +6,22 @@
 At the bottom of your body:
 ```javascript
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
-<script src="js/blueWave.js"></script>
+<script src="js/PixelWave-min.js"></script>
 
-var bluewave = new BlueWave({
+var pixelwave = new PixelWave({
     // options like:
     // canvasTop: 0
 });
 ```
 ## Run Animation
 ```javascript
-bluewave.start();
+pixelwave.start();
 ```
 
 ## Options
 When starting the wave you can add callback functions to get executed at certain times:
 ```javascript
-bluewave.start([runsAtStart], [runsAtMiddle], [runsAtEnd]);
+pixelwave.start([runsAtStart], [runsAtMiddle], [runsAtEnd]);
 ```
 
 You can pass these options while you init the wave:
@@ -44,9 +44,9 @@ You can pass these options while you init the wave:
 
 ```javascript
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
-<script src="js/blueWave.js"></script>
+<script src="js/PixelWave-min.js"></script>
 
-var bluewave = new BlueWave({
+var pixelwave = new PixelWave({
     canvasTop: 50, //for a header
     speedIn: 3,
     speedOut: 1,
@@ -59,7 +59,7 @@ function middle () {console.log('middle')}
 function end () {console.log('end')}
 
 document.getElementById('startImage').addEventListener('click', function() {
-    bluewave.start(start, middle, end);
+    pixelwave.start(start, middle, end);
 })
 ```
 ### Dependencies
