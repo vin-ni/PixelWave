@@ -25,17 +25,11 @@ a:hover {
 img {
     position: absolute;
     top: 0;
-    left: calc(-107.5vw);
-    width: auto;
+    left: 0;
+    width: 100vw;
     display: block;
-    height: 100vh;
-
+    height: auto;
 }
-
-canvas {
-/*    background-color: tomato;*/
-}
-
 
 
 

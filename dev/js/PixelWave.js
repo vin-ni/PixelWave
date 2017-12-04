@@ -1,14 +1,22 @@
 /* eslint-disable */
 
-function BlueWave(settings) {
+//  PixelWave.js
+//  Pixel Wave Animation for seamless page transitions 
+//  Version 0.1 04/12/17
+//
+//  Created by Vinzenz Aubry for sansho (04/12/17) . 
+//  MIT Licensed
+//
+
+function PixelWave(settings) {
 	this.animationSettings = {
 		xSize: settings.xSize || 48,
 		ySize: settings.ySize || 48,
 		steps: settings.steps || [0.1, 0.1, 0.3, 0.5, 0.5, 1],
 		color: settings.color || "#305EFF",
 		zIndex: settings.zIndex || 99999,
-		speedIn: settings.speedIn || 1.2, //0.5
-		speedOut: settings.speedOut || 1.2, //0.5
+		speedIn: settings.speedIn || 0.7, //0.7
+		speedOut: settings.speedOut || 0.7, //0.7
 		canvasTop: settings.canvasTop || 0,
 		canvasLeft: settings.canvasLeft || 0,
 		autoCalculateSquaresSize: settings.autoCalculateSquaresSize || false,
@@ -36,9 +44,9 @@ function BlueWave(settings) {
 	// this.calculateSettings();
 }
 
-BlueWave.prototype.addCanvas = function () {
+PixelWave.prototype.addCanvas = function () {
 	var canv = document.createElement('canvas');
-	canv.id = 'blueWave';
+	canv.id = 'pixelWave';
 	canv.style.zIndex = this.animationSettings.zIndex;
 	canv.style.pointerEvents = "none";
 	canv.style.display = 'block';
@@ -51,10 +59,10 @@ BlueWave.prototype.addCanvas = function () {
 	this.ctx = this.canvas.getContext("2d");
 }
 
-BlueWave.prototype.calculateSettings = function() {
+PixelWave.prototype.calculateSettings = function() {
 	//amount coloumns ↓↓↓↓
 	this.calculatedSettings.coloumns = Math.ceil(this.size.w / this.animationSettings.xSize);
-	//amount linien →
+	//amount lines  →
 	//				→
 	//				→
 	this.calculatedSettings.rows = Math.ceil(this.size.h / this.animationSettings.ySize);
@@ -63,7 +71,7 @@ BlueWave.prototype.calculateSettings = function() {
 	this.calculatedSettings.rowArray = Array.apply(null, {length: n}).map(Number.call, Number);
 }
 
-BlueWave.prototype.start = function(callbackStart, callbackMiddle, callbackEnd) {
+PixelWave.prototype.start = function(callbackStart, callbackMiddle, callbackEnd) {
 	if (this.calculateSettings.blockRun) {return}
 	this.calculateSettings.blockRun = true;
 
@@ -86,7 +94,7 @@ BlueWave.prototype.start = function(callbackStart, callbackMiddle, callbackEnd) 
 				 		ease: Power0.easeNone});
 }
 
-BlueWave.prototype.end = function(callbackEnd) {
+PixelWave.prototype.end = function(callbackEnd) {
 	//reset values
 	this.calculatedSettings.currentDistance = 0;
 	this.calculatedSettings.lastDraw = 0;
@@ -103,7 +111,7 @@ BlueWave.prototype.end = function(callbackEnd) {
 				 		ease: Power0.easeNone});
 }
 
-BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
+PixelWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 	var distance = Math.round(scope.calculatedSettings.currentDistance);
 	
 	if (distance > scope.calculatedSettings.lastDraw) {
@@ -112,7 +120,7 @@ BlueWave.prototype.updateHandlerRunIn = function(scope, addRectangles) {
 	}	
 }
 
-BlueWave.prototype.completeHandlerStart = function(scope, callbackMiddle, callbackEnd) {
+PixelWave.prototype.completeHandlerStart = function(scope, callbackMiddle, callbackEnd) {
 	if (callbackMiddle) {callbackMiddle()};
 
 	//call animation out
@@ -120,13 +128,13 @@ BlueWave.prototype.completeHandlerStart = function(scope, callbackMiddle, callba
 	
 }
 
-BlueWave.prototype.completeHandlerEnd = function(scope, callbackEnd) {
+PixelWave.prototype.completeHandlerEnd = function(scope, callbackEnd) {
 	if (callbackEnd) {callbackEnd()};
 	scope.calculateSettings.blockRun = false;
 	scope.calculatedSettings.ending = false;
 }
 
-BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
+PixelWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	this.ctx.fillStyle = this.animationSettings.color;
 
 	for (let i = 0; i < this.animationSettings.steps.length; i++) {
@@ -155,14 +163,14 @@ BlueWave.prototype.spawnPixels = function(xStep, addRectangles) {
 	}	
 }
 
-BlueWave.prototype.setBlueWavePosition = function(x, y) {
+PixelWave.prototype.setPixelWavePosition = function(x, y) {
 	this.animationSettings.canvasTop = y;
 	this.animationSettings.canvasLeft = x;
 	this.canvas.style.top = `${this.animationSettings.canvasTop}px`;
 	this.canvas.style.left = `${this.animationSettings.canvasLeft}px`;
 }
 
-BlueWave.prototype.calculateSquaresSize = function() {
+PixelWave.prototype.calculateSquaresSize = function() {
 	if (this.animationSettings.autoCalculateSquaresSize) {
 		if (this.size.w >= 1600) {
 			this.animationSettings.xSize = 48;
@@ -180,7 +188,7 @@ BlueWave.prototype.calculateSquaresSize = function() {
 	}
 }
 
-BlueWave.prototype.eventListeners = function () {
+PixelWave.prototype.eventListeners = function () {
 	this.resize = this.resizeFunctions.bind(this);
 	window.addEventListener('resize', this.resize);
 	// window.addEventListener('resize', this.resizeFunctions);
@@ -217,14 +225,14 @@ BlueWave.prototype.eventListeners = function () {
 	}, 250);
 }
 
-BlueWave.prototype.resizeFunctions = function () {
+PixelWave.prototype.resizeFunctions = function () {
 	if (!this.calculateSettings.blockRun) {return}
 	this.animation.pause();
 	//debouncer
 	this.debounceF();
 }
 
-BlueWave.prototype.debounce = function (func, wait, immediate) {
+PixelWave.prototype.debounce = function (func, wait, immediate) {
 	var timeout;
 	return function() {
 		var context = this, args = arguments;
@@ -239,7 +247,7 @@ BlueWave.prototype.debounce = function (func, wait, immediate) {
 	};
 };
 
-BlueWave.prototype.fill = function () {
+PixelWave.prototype.fill = function () {
 	if (this.calculateSettings.blockRun) {
     	this.ctx.fillStyle = this.animationSettings.color;
     	this.ctx.fillRect(0,0,this.size.w,this.size.h);
@@ -247,7 +255,7 @@ BlueWave.prototype.fill = function () {
     }
 }
 
-BlueWave.prototype.resizeCanvas = function () {
+PixelWave.prototype.resizeCanvas = function () {
 	this.size.w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     this.size.h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -262,7 +270,7 @@ BlueWave.prototype.resizeCanvas = function () {
 
 // =================== SANTAS LITTLE HELPERS =================== //
 
-BlueWave.prototype.shuffleArray = function (array) {
+PixelWave.prototype.shuffleArray = function (array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
@@ -280,9 +288,4 @@ BlueWave.prototype.shuffleArray = function (array) {
 
   return array;
 }
-
-
-
-
-
 

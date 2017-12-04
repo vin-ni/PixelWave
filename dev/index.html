@@ -19,7 +19,7 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
         <script src="js/main.js"></script>
-        <script src="js/blueWave.js"></script>
+        <script src="js/PixelWave.js"></script>
         <script type="text/javascript">
             function start () {
                 //preload next image
@@ -38,13 +38,13 @@
             }
 
 
-            var bluewave = new BlueWave({
-                canvasTop: 0
+            var pixelwave = new PixelWave({
+                canvasTop: 0, //for a fixed header           
             });
 
             document.getElementById('startImage').addEventListener('click', function() {
                 //function start, middle, end
-                bluewave.start(start, middle, end);
+                pixelwave.start(start, middle, end);
             })
 
             
