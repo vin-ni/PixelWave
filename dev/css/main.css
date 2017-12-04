@@ -25,10 +25,11 @@ a:hover {
 img {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: calc(-107.5vw);
+    width: auto;
     display: block;
-    height: auto;
+    height: 100vh;
+
 }
 
 canvas {
