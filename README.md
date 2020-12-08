@@ -65,4 +65,4 @@ document.getElementById('startImage').addEventListener('click', function() {
 ### Dependencies
 Greensockets amazing [gsap](https://greensock.com/gsap). 
 ### Contribution
-If anyone wants to contribute, just fork the project or write me at vinzenz@sansho.studio :)
+If anyone wants to contribute, just fork the project or write me at v@vinzenzaubry.com :)
